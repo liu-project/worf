@@ -76,7 +76,7 @@
 		<jaxb-api.version>2.2.9</jaxb-api.version>
 		<jaxb-impl.version>2.2.7</jaxb-impl.version>
 		<javassist.version>3.18.1-GA</javassist.version>
-		<netty-all.version>4.0.21.Final</netty-all.version>
+		<netty-all.version>4.1.42.Final</netty-all.version>
 		<httpclient.version>4.4.1</httpclient.version>
 		<httpcore.version>4.4.1</httpcore.version>
 		<httpmime.version>4.4.1</httpmime.version>
