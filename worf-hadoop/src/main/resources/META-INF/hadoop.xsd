@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://hadoop.rjs.com/schema/hadoop"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	targetNamespace="http://hadoop.rjs.com/schema/hadoop">
+	
+	<xsd:import namespace="http://www.springframework.org/schema/beans"/>
+	
+	<xsd:complexType name="abstractType">
+	 	<xsd:attribute name="id" type="xsd:string" use="required"/> 
+		<xsd:attribute name="name" type="xsd:string" use="optional"/>
+		<xsd:attribute name="classname" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ 类的全路径名 ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	    <xsd:attribute name="ref" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ 关联对象 ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="input" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ 输入类型 ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="output" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ 输出类型 ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	
+	<xsd:complexType name="mapperType">
+		<xsd:complexContent>
+			<xsd:extension base="abstractType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="reducerType">
+		<xsd:complexContent>
+			<xsd:extension base="abstractType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="combinerType">
+		<xsd:complexContent>
+			<xsd:extension base="abstractType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="groupingComparatorType">
+		<xsd:complexContent>
+			<xsd:extension base="abstractType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="partitionerType">
+		<xsd:complexContent>
+			<xsd:extension base="abstractType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="chainMapperType">
+		<xsd:sequence>
+			<xsd:element name="mapperclass">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="mapperType">
+							<xsd:attribute name="order" type="xsd:integer" use="optional">
+								<xsd:annotation>
+									<xsd:documentation><![CDATA[ 序号，从1开始 ]]></xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:string" use="required"/>
+		<xsd:attribute name="name" type="xsd:string" use="optional"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="chainReducerType">
+ 		<xsd:sequence>
+			<xsd:element name="reducerclass">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="reducerType">
+							<xsd:attribute name="order" type="xsd:integer" use="optional">
+								<xsd:annotation>
+									<xsd:documentation><![CDATA[ 序号，从1开始 ]]></xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+ 		<xsd:attribute name="id" type="xsd:string" use="required"/>
+		<xsd:attribute name="name" type="xsd:string" use="optional"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="mrjobType">
+		<xsd:sequence>
+			 <xsd:choice>
+				<xsd:element name="chainmapper">
+					<xsd:complexType>
+						<xsd:complexContent>
+							<xsd:extension base="chainMapperType">
+							</xsd:extension>
+						</xsd:complexContent>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="mapper">
+					<xsd:complexType>
+						<xsd:complexContent>
+							<xsd:extension base="mapperType">
+							</xsd:extension>
+						</xsd:complexContent>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:choice>
+			<xsd:choice>
+				<xsd:element name="chainreducer">
+					<xsd:complexType>
+						<xsd:complexContent>
+							<xsd:extension base="chainReducerType">
+							</xsd:extension>
+						</xsd:complexContent>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="reducer">
+					<xsd:complexType>
+						<xsd:complexContent>
+							<xsd:extension base="reducerType">
+							</xsd:extension>
+						</xsd:complexContent>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:choice>
+			<xsd:element name="combiner" type="abstractType"></xsd:element>
+			<xsd:element name="groupingcomparator" type="abstractType"></xsd:element>
+			<xsd:element name="partitioner" type="abstractType"></xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:string" use="required"/>
+		<xsd:attribute name="name" type="xsd:string" use="optional"/>
+		<xsd:attribute name="classname" type="xsd:string" use="optional"/>
+		<xsd:attribute name="inputpath" type="xsd:string" use="optional"/>
+		<xsd:attribute name="outputpath" type="xsd:string" use="optional"/>
+	</xsd:complexType>
+	
+	<xsd:element name="mrjob" type="mrjobType">
+	</xsd:element>
+	
+	<xsd:element name="chainmapper" type="chainMapperType" >
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[ 链式mapper，多个mapper需设置order属性 ]]></xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	
+	<xsd:element name="chainreducer" type="chainReducerType">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[ 链式reducer，多个reducer需设置order属性 ]]></xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	
+	<xsd:element name="mapper" type="mapperType">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[ 单个mapper ]]></xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	
+	<xsd:element name="reducer" type="reducerType">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[ 单个reducer ]]></xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	
+	<xsd:element name="combiner" type="combinerType">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[ 自定义组合 ]]></xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	
+	<xsd:element name="groupingcomparator" type="groupingComparatorType">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[ 自定义分组 ]]></xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	
+	<xsd:element name="partitioner" type="partitionerType">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[ 自定义分区 ]]></xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+</xsd:schema>

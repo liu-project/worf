@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <aop:aspectj-autoproxy/>
+
+    <context:component-scan base-package="orj.worf.rtx"/>
+
+<!--     <bean class="orj.worf.core.config.ScannerConfigurer">
+        <property name="basePackages">
+            <array>
+                <value>orj.worf.rtx.mapper</value>
+            </array>
+        </property>
+    </bean> -->
+    
+    <!-- redis 的持久化方式 -->
+	<bean id="rtxredisPersistence" class="orj.worf.rtx.persistence.RedisPersistence"/>
+	
+	<bean id="rtxtransactionPersist" class="orj.worf.rtx.persistence.TransactionPersist">
+		<property name="persistence" ref="rtxredisPersistence" />
+	</bean>
+	
+</beans>

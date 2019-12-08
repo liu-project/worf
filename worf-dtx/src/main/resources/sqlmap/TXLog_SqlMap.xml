@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="orj.worf.dtx.dao.TXLogDAO" >
+  <resultMap id="BaseResultMap" type="orj.worf.ta.dao.TXLog" >
+    <id column="tid" property="tid" jdbcType="VARCHAR" />
+    <result column="bid" property="bid" jdbcType="VARCHAR" />
+    <result column="serviceName" property="service_name" jdbcType="VARCHAR" />
+    <result column="operationName" property="operation_name" jdbcType="VARCHAR" />
+    <result column="params" property="params" jdbcType="VARCHAR" />
+    <result column="reqTime" property="completeTime" jdbcType="TIMESTAMP" />
+    <result column="rollbackTime" property="rollbackTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tid, bid, service_name, operation_name, params, completeTime, rollbackTime, status
+  </sql>
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tx_logs
+    where tid = #{tid,jdbcType=VARCHAR}
+  </select>
+   <select id="selectForUpdate" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tx_logs
+    where tid = #{tid,jdbcType=VARCHAR}
+    for update
+  </select>
+  <insert id="addLog" parameterType="orj.worf.ta.dao.TXLog" >
+    insert into tx_logs (tid, uid, service_name, 
+      operation_name, params, completeTime, rollbackTime, status)
+    values (#{tid,jdbcType=VARCHAR}, #{bid,jdbcType=VARCHAR}, #{service_name,jdbcType=VARCHAR}, 
+      #{operation_name,jdbcType=VARCHAR}, #{params,jdbcType=VARCHAR}, 
+      #{completeTime,jdbcType=TIMESTAMP}, #{rollbackTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER},)
+  </insert>
+  <update id="modifyLog" parameterType="orj.worf.ta.dao.TXLog" >
+    update tx_logs
+    set 
+      bid = #{bid,jdbcType=VARCHAR},
+      service_name = #{service_name,jdbcType=VARCHAR},
+      operation_name = #{operation_name,jdbcType=VARCHAR},
+      params = #{params,jdbcType=VARCHAR},
+      completeTime = #{completeTime,jdbcType=VARCHAR},
+      rollbackTime = #{rollbackTime,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+    where tid = #{tid,jdbcType=VARCHAR}
+  </update>
+</mapper>

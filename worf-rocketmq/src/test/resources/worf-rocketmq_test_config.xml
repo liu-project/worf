@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop" 
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<description>rocket-MQ配置 </description>
+	<context:component-scan base-package="orj.worf.rocketmq"></context:component-scan>
+	<bean class="orj.worf.rocketmq.bean.MQScannerConfigure">
+		<property name="basePackage" value="orj.worf.rocketmq"/>
+	</bean>
+	<!-- <bean class="orj.worf.rocketmq.listener.MQContextRefreshedListener"></bean> -->
+	<!-- 生产者配置信息 -->
+	<!-- <bean id="defaultProducer" class="com.aliyun.openservices.ons.api.bean.ProducerBean" init-method="start" destroy-method="shutdown">
+        <property name="properties" > 
+            <props>
+                <prop key="ProducerId">${mq.defaultProducerId}</prop>
+                <prop key="AccessKey">${mq.defaultAccessKey}</prop>
+                <prop key="SecretKey">${mq.defaultSecretKey}</prop>
+                <prop key="ONSAddr">${mq.ONSAddr}</prop>
+            </props>
+        </property>
+    </bean> -->
+    
+    
+    
+    <!-- 测试时使用 -->
+    <context:property-placeholder location="classpath:mq.properties"/>
+    <bean class="orj.worf.rocketmq.test.ProducerTestService" id="producerTestService"></bean>
+    <bean class="orj.worf.rocketmq.test.OrderProducerService"/>
+     <!-- <bean id="msgListner" class="orj.worf.rocketmq.test.ConsumerTestService"></bean>
+     <bean id="consumer" class="com.aliyun.openservices.ons.api.bean.ConsumerBean" init-method="start" destroy-method="shutdown">
+        <property name="properties" > 消费者配置信息
+            <props>
+                <prop key="ConsumerId">CID_DEMO</prop> 请替换XXX
+                <prop key="AccessKey">AKDEMO</prop>
+                <prop key="SecretKey">SKDEMO</prop>
+                将消费者线程数固定为50个
+                <prop key="ConsumeThreadNums">50</prop>
+               
+            </props>
+        </property>
+        
+        <property name="subscriptionTable">
+            <map>
+                <entry value-ref="msgListner">
+                    <key>
+                        <bean class="com.aliyun.openservices.ons.api.bean.Subscription">
+                            <property name="topic" value="TopicTestMQ"/>
+                            <property name="expression" value="*"/>expression即Tag，可以设置成具体的Tag，如 taga||tagb||tagc，也可设置成*。 *仅代表订阅所有Tag，不支持通配
+                        </bean>
+                    </key>
+                </entry>
+                更多的订阅添加entry节点即可
+            </map>
+        </property>
+    </bean> -->
+</beans>

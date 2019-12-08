@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<import resource="classpath:worf-datasource_c3p0.xml" />
+
+	<!-- <context:property-placeholder ignore-unresolvable="true" ignore-resource-not-found="true" location="classpath:conf/jdbc.properties" /> -->
+	 <bean id="propertyConfigurer" class="orj.worf.datasource.PropertyPlaceholderConfigurerCipher">  
+            <property name="locations">
+                <list>
+                    <value>classpath:conf/*.properties</value>
+                </list>
+            </property>
+    </bean>
+	
+	<bean id="dataSource1" parent="commonDataSourceConfig" lazy-init="true">
+		<property name="driverClass" value="${jdbc.driverclass}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxPoolSize" value="${jdbc.pool.size.max}" />
+	</bean>
+
+	<bean id="dataSource2" parent="commonDataSourceConfig" lazy-init="true">
+		<property name="driverClass" value="${jdbc1.driverclass}" />
+		<property name="jdbcUrl" value="${jdbc1.url}" />
+		<property name="user" value="${jdbc1.username}" />
+		<property name="password" value="${jdbc1.password}" />
+		<property name="maxPoolSize" value="${jdbc1.pool.size.max}" />
+	</bean>
+	<bean id="dataSource" class="orj.worf.datasource.DynamicDataSource">  
+     <property name="targetDataSources">  
+         <map key-type="java.lang.String">
+             <!-- 指定lookupKey和与之对应的数据源 -->
+             <entry key="dataSourceWrite" value-ref="dataSource1"></entry>  
+             <entry key="dataSourceRead" value-ref="dataSource2"></entry>  
+         </map>  
+     </property>  
+     <!-- 这里可以指定默认的数据源 -->
+     <property name="defaultTargetDataSource" ref="dataSource1" />  
+	</bean>
+	<bean class="orj.worf.datasource.DataSourceInitialize">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+</beans>

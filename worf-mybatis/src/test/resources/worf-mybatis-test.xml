@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+	
+	<!-- <import resource="classpath:service-dependence_mq_loading.xml"/> -->
+	<bean id="paginationInterceptor" class="orj.worf.mybatis.interceptor.PaginationInterceptor">
+		<property name="dialect" ref="dialect" />
+	</bean>
+	<bean id="sqlInterceptor" class="orj.worf.mybatis.interceptor.SqlInterceptor"></bean>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:worf-mybatis_config.xml" />
+		<property name="failFast" value="true" />
+		<property name="mapperLocations">
+			<array>
+				<value>classpath*:/sqlmap/**/*.xml</value>
+			</array>
+		</property>
+		<property name="plugins">
+			<array>
+				<ref bean="paginationInterceptor" />
+				<ref bean="sqlInterceptor"/>
+			</array>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+	    <property name="driverClass" value="com.mysql.jdbc.Driver" />
+	    <property name="jdbcUrl" value="jdbc:mysql://rm-bp137a4fx11oe5a32.mysql.rds.aliyuncs.com/rjs_test_admin_web?characterEncoding=UTF-8" />
+	    <property name="user" value="javatestusr" />
+	    <property name="password" value="jGRnWqt1_ydK" />
+	</bean>
+	<bean id="dialect" class="orj.worf.mybatis.dialect.MySql5Dialect" />
+	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" lazy-init="true" />
+	<!-- <bean class="orj.worf.core.config.ScannerConfigurer">
+        <property name="basePackages">
+            <array>
+                <value>orj.worf.mybatis.mapper</value>
+            </array>
+        </property>
+    </bean> -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="orj.worf.mybatis.mapper"/>
+		<property name="annotationClass" value="org.springframework.stereotype.Repository"/>
+	</bean>
+</beans>

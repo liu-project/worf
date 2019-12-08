@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="orj.worf.scheduler.quartz.mapper.WorfJobDAO">
+	<resultMap id="JobBaseResultMap" type="orj.worf.scheduler.quartz.model.WorfJob">
+		<id column="job_id" property="jobId" jdbcType="BIGINT" />
+		<result column="job_name" property="jobName" jdbcType="VARCHAR" />
+		<result column="job_group" property="jobGroup" jdbcType="VARCHAR" />
+		<result column="job_status" property="jobStatus" jdbcType="TINYINT" />
+		<result column="cron_expression" property="cronExpression" jdbcType="VARCHAR" />
+		<result column="class_name" property="className" jdbcType="VARCHAR" />
+		<result column="method_name" property="methodName" jdbcType="VARCHAR" />
+		<result column="user_email" property="userEmail" jdbcType="VARCHAR" />
+		<result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+		<result column="job_desc" property="desc" jdbcType="VARCHAR" />
+		<result column="trigger_name" property="triggerName" jdbcType="VARCHAR" />
+		<result column="trigger_group" property="triggerGroup" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Job_Base_Column_List">
+		job_id, job_name, job_group, job_status, cron_expression, class_name, method_name, 
+		user_email, user_phone, job_desc,trigger_name,trigger_group
+	</sql>
+	
+	<insert id="insert" parameterType="orj.worf.scheduler.quartz.model.WorfJob">
+		insert into worf_job (job_id, job_name, job_group, job_status, cron_expression, 
+		class_name, method_name,user_email, user_phone, job_desc,trigger_name,trigger_group)
+		values (#{jobId, jdbcType=BIGINT},#{jobName, jdbcType=VARCHAR},#{jobGroup, jdbcType=VARCHAR},#{jobStatus, jdbcType=TINYINT}
+		,#{cronExpression, jdbcType=VARCHAR},#{className, jdbcType=VARCHAR},#{methodName, jdbcType=VARCHAR}
+		,#{userEmail, jdbcType=VARCHAR},#{userPhone, jdbcType=VARCHAR},#{desc, jdbcType=VARCHAR},#{triggerName, jdbcType=VARCHAR}
+		,#{triggerGroup, jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="updateExpressionByJobName" parameterType="java.util.Map">
+		update worf_job 
+		set cron_expression = #{cron_expression, jdbcType=VARCHAR}	
+		where job_name = #{job_name, jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteByJobName" parameterType="java.lang.String">
+		delete from worf_job where job_name = #{job_name, jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="queryByStatus" resultMap="JobBaseResultMap" parameterType="java.util.Map">
+		select <include refid="Job_Base_Column_List"></include>
+		 from worf_job where job_status = #{status, jdbcType=TINYINT}
+	</select> 
+
+	<select id="queryWorfJobByJobName" resultMap="JobBaseResultMap" parameterType="java.util.Map">
+		select <include refid="Job_Base_Column_List"></include>
+		from worf_job where job_name = #{jobName, jdbcType=VARCHAR} limit 1
+	</select>
+	
+	<select id="queryExecutingJobs" resultType="java.util.Map">
+		select 
+			t.job_name,t.job_group,t.trigger_name,t.trigger_group,t1.job_desc,
+			DATE_FORMAT(FROM_UNIXTIME(t.fired_time/1000), '%Y-%m-%d %H:%i:%s') trigger_time 
+		from qrtz_fired_triggers t, 
+			 worf_job t1 
+	    where t.job_name is not null
+	    and   t.job_name = t1.job_name
+	</select>
+	
+	<select id="getBeginingToFireJobs" resultType="java.util.Map">
+		SELECT
+			t.job_name,
+			t.trigger_name,
+			DATE_FORMAT(
+				FROM_UNIXTIME(t.next_fire_time / 1000),
+				'%Y-%m-%d %H:%i:%s'
+			) next_fire_time,
+			t1.job_desc
+		FROM
+			qrtz_triggers t
+		INNER JOIN worf_job t1 ON t.job_name = t1.job_name
+		ORDER BY t.next_fire_time ASC
+	</select>
+</mapper>

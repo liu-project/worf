@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/tx
+			http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+			http://www.springframework.org/schema/aop
+			http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" p:dataSource-ref="dataSource" p:defaultTimeout="3" p:transactionSynchronization="0" />
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" mode="proxy" order="200" />
+	<bean class="orj.worf.tx.test.TestService"/>
+	<bean class="orj.worf.tx.test.Test2Service"/>
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+	    <property name="driverClass" value="com.mysql.jdbc.Driver" />
+	    <property name="jdbcUrl" value="jdbc:mysql://rm-bp137a4fx11oe5a32.mysql.rds.aliyuncs.com/rjs_test_admin_web?characterEncoding=UTF-8" />
+	    <property name="user" value="javatestusr" />
+	    <property name="password" value="jGRnWqt1_ydK" />
+	</bean>
+    <!-- <bean id="dataSourceProxy" class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy">
+        <property name="targetDataSource" ref="dataSource" />
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSourceProxy" />
+    </bean>
+	<bean id="dataSourceAspect" class="orj.worf.tx.pointcut.DataSourceAspect" />
+	
+
+     <aop:config>
+         <aop:aspect ref="dataSourceAspect" order="125">
+             <aop:pointcut id="dataSourcePointcut" expression="orj.worf.tx.pointcut.DataSourcePointcuts.dsMarkPointcut()"/>
+             <aop:before pointcut-ref="dataSourcePointcut" method="intercept" />
+             <aop:after pointcut-ref="dataSourcePointcut" method="interceptAfter" />
+         </aop:aspect>
+     </aop:config> -->
+	
+</beans>

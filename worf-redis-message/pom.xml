@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+		<groupId>orj.worf</groupId>
+		<artifactId>worf-parent</artifactId>
+		<relativePath>../worf-parent/pom.xml</relativePath>
+		<version>0.1.0-SNAPSHOT</version>
+ </parent>
+  <artifactId>worf-redis-message</artifactId>
+  <packaging>jar</packaging>
+  <name>worf-redis-message</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+		<groupId>orj.worf</groupId>
+		<artifactId>worf-redis</artifactId>
+		<version>${worf.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-beans</artifactId>
+		<version>${spring.version}</version>
+	</dependency>
+	
+  </dependencies>
+</project>
