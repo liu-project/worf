@@ -17,7 +17,7 @@
 		<spring.batch.groupId>org.springframework.batch</spring.batch.groupId>
 		<spring.batch.version>3.0.1.RELEASE</spring.batch.version>
 		<poi.groupId>org.apache.poi</poi.groupId>
-		<poi.version>3.8</poi.version>
+		<poi.version>4.1.2</poi.version>
 		<slf4j.groupId>org.slf4j</slf4j.groupId>
 		<slf4j.version>1.7.15</slf4j.version>
 		<logback.groupId>ch.qos.logback</logback.groupId>
